@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "E:\\project\\blockchain\\TEST_REPO\\dappazon\\contracts\\Carpooling.sol": {
+      "lastModificationDate": 1712838856578,
+      "contentHash": "6616ac00289b891e21db68c2a49824fe",
+      "sourceName": "contracts/Carpooling.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "carpooling"
+      ]
+    }
+  }
+}
