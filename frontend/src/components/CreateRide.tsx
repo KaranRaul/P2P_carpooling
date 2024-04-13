@@ -1,5 +1,6 @@
 import { Spinner } from '@material-tailwind/react';
 import React, { useState } from 'react';
+import CreateDriver from './smallCompo/CreateDriver';
 
 const CreateRide = (props: any) => {
     const [origin, setOrigin] = useState('');
@@ -7,8 +8,12 @@ const CreateRide = (props: any) => {
     const [fare, setFare] = useState(0);
     const [seats, setSeats] = useState(1);
     const [deptTime, setDeptTime] = useState('');
+    const [reachTime, setReachTime] = useState('');
+
     const [processing, setProcessing] = useState(false);
     // const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [driver, setDriver] = useState(-1);
+    // const 
     const [successModalOpen, setSuccessModalOpen] = useState(false);
     const carpoolContract = props.carpool;
     const handleCreateRide = async (e: any) => {
@@ -19,7 +24,7 @@ const CreateRide = (props: any) => {
 
         try {
             // Call the contract method to create a ride
-            const tx = await carpoolContract.createride(origin, destination, deptTime, fare, seats);
+            const tx = await carpoolContract.createride(origin, destination, deptTime, fare, seats, fare, fare, reachTime, false);
 
             // Wait for the transaction to be confirmed
             await tx.wait();
@@ -49,6 +54,7 @@ const CreateRide = (props: any) => {
 
     return (
         <div className="container mx-auto mt-8">
+            {driver == -1 && <CreateDriver carpool={carpoolContract} setDriver={setDriver} />}
             {successModalOpen && (
                 <div className="fixed z-10 inset-0 overflow-y-auto">
                     <div className="flex items-center justify-center min-h-screen px-4 text-center">
@@ -140,6 +146,17 @@ const CreateRide = (props: any) => {
                         className="border border-gray-300 rounded px-3 py-2 w-full"
                         value={deptTime}
                         onChange={(e) => setDeptTime(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="deptTime" className="block text-sm font-semibold">Approx Reach Time</label>
+                    <input
+                        type="number"
+                        id="deptTime"
+                        className="border border-gray-300 rounded px-3 py-2 w-full"
+                        value={deptTime}
+                        onChange={(e) => setReachTime(e.target.value)}
                         required
                     />
                 </div>

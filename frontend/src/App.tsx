@@ -23,15 +23,15 @@ function App() {
 
   const loadBlockchainData = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum)
-    console.log(provider);
+    // console.log(provider);
     const network = await provider.getNetwork()
     const signer = await provider.getSigner();
     // console.log(signer)
     // console.log(network);
     setProvider(provider)
-    console.log(Carpool);
+    // console.log(Carpool);
     const carpool = new ethers.Contract(config[network.chainId].carpool.address, Carpool, signer)
-    console.log(carpool);
+    // console.log(carpool);
     setCarpool(carpool);
     // setDappazon(dappazon)
   }
@@ -41,7 +41,7 @@ function App() {
       const acc = ethers.getAddress(accts[0]);
       // console.log(ethers)
       setAccount(acc);
-      console.log(acc);
+      // console.log(acc);
     } else {
       console.error("No accounts found.");
     }
