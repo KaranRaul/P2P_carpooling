@@ -10,6 +10,8 @@ import Home from './components/Home'
 // hardhat.config.js
 import config from './config.json'
 import Carpool from './abis/Carpool.json'
+import MyRide from "./components/MyRide";
+import BookedRide from "./components/BookedRides";
 function App() {
 
 
@@ -85,6 +87,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/createRide" element={<CreateRide carpool={carpool} />} />
         <Route path="/bookRide" element={<BookRide carpool={carpool} />} />
+        <Route path="/myRides" element={<MyRide carpool={carpool} />} />
+        <Route path="/bookedRides" element={<BookedRide carpool={carpool} />} />
 
       </Routes>
     </BrowserRouter >

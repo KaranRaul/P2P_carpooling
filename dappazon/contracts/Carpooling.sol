@@ -138,6 +138,13 @@ contract carpooling {
         );
         ridecount++;
     }
+    function completeRide(uint _rideId) public {
+        require(
+            msg.sender == rideowner[_rideId],
+            "Only the ride owner can complete the ride"
+        );
+        rides[_rideId].isComplete = true;
+    }
     function bookRide(uint rideId, uint _userId) public {
         require(_userId >= 0, "Invalid userId");
 
