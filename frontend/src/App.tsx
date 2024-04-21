@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from 'react'
 import './App.css'
-import { ethers } from 'ethers'
+import { EtherSymbol, ethers } from 'ethers'
 import BookRide from './components/BookRide'
 import CreateRide from './components/CreateRide'
 import Home from './components/Home'
@@ -35,8 +35,32 @@ function App() {
     const carpool = new ethers.Contract(config[network.chainId].carpool.address, Carpool, signer)
     // console.log(carpool);
     setCarpool(carpool);
+
+
     // setDappazon(dappazon)
   }
+  const { ethereum } = window as WindowWithEthereum;
+  // const test = async () => {
+  //   if (ethereum) {
+  //     const valInEth = 12; // 4 ETH
+  //     const valInWei = ethers.parseEther(valInEth.toString()); // Convert to Wei
+  //     const valInHex = '0x' + valInWei.toString(16); // Convert to hexadecimal string
+
+  //     console.log(valInHex);
+
+  //     await ethereum.request({
+  //       method: "eth_sendTransaction",
+  //       params: [
+  //         {
+  //           from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  //           to: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  //           gas: "0x5208",
+  //           value: valInHex,
+  //         },
+  //       ],
+  //     });
+  //   }
+  // };
   const connect = async () => {
     const accts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     if (accts.length > 0) {
@@ -72,7 +96,9 @@ function App() {
   useEffect(() => {
     // connect();
     loadBlockchainData();
+    // test();
   }, [])
+
 
   useEffect(() => {
     if (carpool) {

@@ -86,6 +86,12 @@
                 "internalType": "uint256",
                 "name": "approxReachTime",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "accAddress",
+                "type": "string"
             }
         ],
         "name": "rideCreated",
@@ -133,9 +139,9 @@
         "name": "addressDetails",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "int256",
                 "name": "userId",
-                "type": "uint256"
+                "type": "int256"
             },
             {
                 "internalType": "string",
@@ -164,9 +170,9 @@
                 "type": "uint256"
             },
             {
-                "internalType": "uint256",
+                "internalType": "int256",
                 "name": "_userId",
-                "type": "uint256"
+                "type": "int256"
             }
         ],
         "name": "bookRide",
@@ -192,6 +198,11 @@
             {
                 "internalType": "string",
                 "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_accAddress",
                 "type": "string"
             },
             {
@@ -232,9 +243,9 @@
         "name": "createUser",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "int256",
                 "name": "",
-                "type": "uint256"
+                "type": "int256"
             }
         ],
         "stateMutability": "nonpayable",
@@ -286,6 +297,11 @@
                 "internalType": "bool",
                 "name": "_isComplete",
                 "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_accAddress",
+                "type": "string"
             }
         ],
         "name": "createride",
@@ -317,6 +333,11 @@
                 "internalType": "uint256",
                 "name": "phoneNo",
                 "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "accAddress",
+                "type": "string"
             }
         ],
         "stateMutability": "view",
@@ -339,9 +360,9 @@
                         "type": "uint256"
                     },
                     {
-                        "internalType": "uint256",
+                        "internalType": "int256",
                         "name": "userId",
-                        "type": "uint256"
+                        "type": "int256"
                     },
                     {
                         "internalType": "string",
@@ -377,6 +398,11 @@
                         "internalType": "uint256",
                         "name": "approxReachTime",
                         "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "accAddress",
+                        "type": "string"
                     }
                 ],
                 "internalType": "struct carpooling.ride[]",
@@ -413,6 +439,11 @@
                         "internalType": "uint256",
                         "name": "phoneNo",
                         "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "accAddress",
+                        "type": "string"
                     }
                 ],
                 "internalType": "struct carpooling.driver",
@@ -421,6 +452,25 @@
             }
         ],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "driverId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getDriverAddress",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -462,9 +512,9 @@
             {
                 "components": [
                     {
-                        "internalType": "uint256",
+                        "internalType": "int256",
                         "name": "userId",
-                        "type": "uint256"
+                        "type": "int256"
                     },
                     {
                         "internalType": "string",
@@ -495,9 +545,9 @@
         "name": "getUserCnt",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "int256",
                 "name": "",
-                "type": "uint256"
+                "type": "int256"
             }
         ],
         "stateMutability": "view",
@@ -514,9 +564,9 @@
         "name": "person",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "int256",
                 "name": "userId",
-                "type": "uint256"
+                "type": "int256"
             },
             {
                 "internalType": "string",
@@ -614,9 +664,9 @@
                 "type": "uint256"
             },
             {
-                "internalType": "uint256",
+                "internalType": "int256",
                 "name": "userId",
-                "type": "uint256"
+                "type": "int256"
             },
             {
                 "internalType": "string",
@@ -652,6 +702,11 @@
                 "internalType": "uint256",
                 "name": "approxReachTime",
                 "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "accAddress",
+                "type": "string"
             }
         ],
         "stateMutability": "view",

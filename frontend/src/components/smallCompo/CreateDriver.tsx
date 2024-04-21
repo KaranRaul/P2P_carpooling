@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 const CreateDriver = (props: any) => {
     const [name, setName] = useState('');
     const [phoneNo, setPhoneNo] = useState('');
+    const [address, setAddress] = useState('');
     const carpoolContract = props.carpool;
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         const parsedPhoneNo = parseInt(phoneNo); // Convert phoneNo to integer
-        const tx = await carpoolContract.createDriver(name, parsedPhoneNo);
+        const tx = await carpoolContract.createDriver(name, address, parsedPhoneNo);
 
         // Pass parsedPhoneNo instead of phoneNo
 
@@ -15,13 +16,16 @@ const CreateDriver = (props: any) => {
         await tx.wait();
         // console.log(tx);
         setName(tx);
+        props.setOpenDriver(false)
         const driverId = await carpoolContract.getDriverCnt();
         console.log(driverId);
         props.setDriver(parseInt(driverId) - 1);
+        props.setDriverAddress(address);
+        props.setDriverCreated(true);
         // Here you can perform any action like calling a function to create a driver on the blockchain
-        console.log('Submitting driver creation form:', { name, parsedPhoneNo }); // Log parsedPhoneNo instead of phoneNo
+        // console.log('Submitting driver creation form:', { name, parsedPhoneNo }); // Log parsedPhoneNo instead of phoneNo
         // Clear the form fields after submission
-        // setName('');
+        setName('');
         setPhoneNo('');
     };
 
@@ -53,6 +57,20 @@ const CreateDriver = (props: any) => {
                         name="phoneNo"
                         value={phoneNo}
                         onChange={(e) => setPhoneNo(e.target.value)}
+                        className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="phoneNo" className="block text-sm font-medium text-gray-700">
+                        Wallet Address
+                    </label>
+                    <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                         className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                         required
                     />

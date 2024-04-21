@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Ride } from '../context/RideContext';
 import Dialog from './smallCompo/Dialog';
 // import { Dialog } from '@material-tailwind/react';
-
+import { Navigate, useNavigate } from 'react-router-dom';
 const BookRide = (props) => {
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
     const [fetchingRides, setFetchingRides] = useState(false);
@@ -42,7 +43,11 @@ const BookRide = (props) => {
         setFetchingRides(false);
         setSearchResults(filteredRides);
     };
-
+    const formatTime = (timestamp) => {
+        const hours = parseInt(timestamp / 60)
+        const min = parseInt(timestamp % 60)
+        return `${hours}:${min}`;
+    };
     const addUser = async (e) => {
         e.preventDefault();
 
@@ -105,7 +110,13 @@ const BookRide = (props) => {
     return (
         <div className="container mx-auto mt-8">
             {userIndex != -1 && userDialog && <Dialog closeModal={closeModal} string1="User Created Successfully" string2={`User ID: ${userIndex}`} />}
-            <h2 className="text-2xl font-bold mb-4">Users</h2>
+
+            <div className='flex justify-between'>
+                {/* <h2 className="text-2xl font-bold mb-4">Users</h2> */}
+                <h2 className="text-2xl font-bold mb-4">Book a Ride</h2>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => navigate('/bookedRides')}> show booked rides</button>
+
+            </div>
             {/* <ul>
                 {users.length > 0 && users.map((user, index) => (
                     <li key={index}>{user.name}, Age: {user.age}, Gender: {user.gender ? 'Male' : 'Female'}</li>
@@ -114,7 +125,6 @@ const BookRide = (props) => {
             {/* Booking success dialog test */}
             {bookingSuccess && (<Dialog closeModal={() => { setBookingSuccess(false) }} string1="Ride Booked Successfully" />
             )}
-            <h2 className="text-2xl font-bold mb-4">Book a Ride</h2>
             <h2 className="text-xl font-bold mb-3">Add User Information</h2>
             {!userAdded && <form onSubmit={addUser} className="mb-4">
                 <div className="flex items-center space-x-4 mb-4">
@@ -180,7 +190,7 @@ const BookRide = (props) => {
                             <div key={ride.rideId} className="border border-gray-300 rounded p-4">
                                 <p className="text-xl font-bold mb-2">{ride.origin} to {ride.destination}</p>
                                 <p className="text-gray-600">Seats Available: {ride.seats.toString()}</p>
-                                <p className="text-gray-600">Departure Time: {ride.departuretime.toString()}</p>
+                                <p className="text-gray-600">Departure Time: {formatTime(parseInt(ride.departuretime))}</p>
                                 <button
                                     onClick={() => handleBookRide(ride.rideId)}
                                     className="bg-green-500 text-white px-3 py-1 rounded mt-2 hover:bg-green-600"
