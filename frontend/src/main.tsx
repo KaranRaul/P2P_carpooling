@@ -14,9 +14,10 @@ import App from './App';
 import { RideProvider } from '../src/context/RideContext';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.StrictMode >
     {/* Wrap your App component with RideProvider */}
     <RideProvider>
+
       <App />
     </RideProvider>
   </React.StrictMode>,

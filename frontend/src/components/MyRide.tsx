@@ -27,7 +27,7 @@ const MyRide = (props) => {
 
 
     return (
-        <div className="container mx-auto mt-8">
+        <div className="container flex flex-col justify-center items-center m-16">
             <div className="flex justify-between mb-4">
                 <input
                     type="number"
@@ -39,64 +39,25 @@ const MyRide = (props) => {
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={fetchRides}>Search</button>
             </div>
             <h2>My Rides</h2>
-            {  /*   <ul>
-                {rides.map(ride => (
-                    <li key={ride.rideId} className={`border p-4 my-4 ${ride.isComplete ? 'border-green-500' : 'border-red-500'}`}>
-                        <div className="flex justify-between">
-                            <div>
-                                <h3 className="text-lg font-bold">{ride.origin} to {ride.destination}</h3>
-                                {!ride.isComplete && parseInt(ride.userId) === -1 && (
-                                    <p className="text-red-600">Not Booked</p>
-                                )}
-                                <p>Departure Time: {formatTime(parseInt(ride.departuretime))}</p>
-                                {/* formatTime(ride.departuretime) 
-                            </div>
-                            {!ride.isComplete && parseInt(ride.userId) !== -1 && (
-                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleCompleteRide(ride.rideId)}>Complete</button>
-                            )}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            */}
+
             {rides.map((ride) => (
-                <div className={`border border-r-2 h-32 ${ride.isComplete ? 'border-green-600' : 'border-blue-500'}  ${parseInt(ride.userId) === -1 ? 'border-red-600' : 'border'}`}>
+                <div className="flex justify-between bg-gray-200 rounded-lg p-4 mb-4 w-3/5">
                     <div>
-                        <h1 className='text-lg font-bold'>{ride.origin} to {ride.destination}</h1>
+                        <h1 className="text-lg font-bold">{ride.origin} to {ride.destination}</h1>
+                        {/* <p>{ride.accAddress}</p> */}
+                        <p>Departure Time: {formatTime(parseInt(ride.departuretime))}</p>
+                        <p>Reach Time: {formatTime(parseInt(ride.approxReachTime))}</p>
                     </div>
-                    <div className='flex justify-around'>
-                        <div>
-                            {ride.accAddress}
-                            <p>Departure Time:{formatTime(parseInt(ride.departuretime))} </p>
-                            <p>Reach Time: {formatTime(parseInt(ride.approxReachTime))}</p>
-                        </div>
-                        <div>
-                            {ride.isComplete && <p className="text-green-600 font-bold">completed</p>}
-                            {!ride.isComplete && parseInt(ride.userId) === -1 && <p className="text-red-600 font-bold">Not Booked</p>}
-                            {!ride.isComplete && parseInt(ride.userId) !== -1 && < p className="text-blue-600 font-bold" >Booked</p>}
-                        </div>
-                        <div>
-                            {!ride.isComplete && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleCompleteRide(ride.rideId)}>Complete</button>}</div>
+                    <div>
+                        {ride.payment && <p className="text-green-600 font-bold">Payment Done</p>}
+                        {ride.isComplete && <p className="text-green-600 font-bold">completed</p>}
+                        {!ride.isComplete && parseInt(ride.userId) === -1 && <p className="text-red-600 font-bold">Not Booked</p>}
+                        {!ride.isComplete && parseInt(ride.userId) !== -1 && <p className="text-blue-600 font-bold">Booked</p>}
+                        {!ride.isComplete && parseInt(ride.userId) !== -1 && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleCompleteRide(ride.rideId)}>Complete</button>}
                     </div>
-                </div>))
-            }
-            {/* <div className='border border-r-2 h-32'>
-                <div>
-                    <h1 className='text-lg font-bold'>hell to xyz</h1>
                 </div>
-                <div className='flex justify-around'>
-                    <div>  <p>Departure Time:2:2 </p>
-                        <p>Reach Time:2:2 </p>
-                    </div>
-                    <div>
-                        <p className="text-red-600 font-bold">Not Booked</p>
-                        <p className="text-green-600 font-bold">completed</p>
-                        <p className="text-blue-600 font-bold" >Booked</p></div>
-                    <div>
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleCompleteRide(ride.rideId)}>Complete</button></div>
-                </div>
-            </div> */}
-        </div >
+            ))}
+        </div>
     );
 };
 

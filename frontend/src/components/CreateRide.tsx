@@ -3,10 +3,12 @@ import Dialog from './smallCompo/Dialog';
 import React, { useState } from 'react';
 import CreateDriver from './smallCompo/CreateDriver';
 import { useNavigate } from 'react-router-dom';
+import image from '../images/image.png'
 const CreateRide = (props: any) => {
     const [origin, setOrigin] = useState('');
     const [destination, setDestination] = useState('');
     const [fare, setFare] = useState(0);
+    const [errorMessage, setErrorMessage] = useState('');
     const [seats, setSeats] = useState(1);
     const [deptTime, setDeptTime] = useState('');
     const [reachTime, setReachTime] = useState('');
@@ -15,7 +17,7 @@ const CreateRide = (props: any) => {
     const [processing, setProcessing] = useState(false);
     // const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [driverId, setDriverId] = useState(0);
-    const [driverCreted, setDriverCreated] = useState(true);
+    const [driverCreted, setDriverCreated] = useState(false);
     const [openDriver, setOpenDriver] = useState(false)
     const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [driverAddress, setDriverAddress] = useState();
@@ -36,10 +38,12 @@ const CreateRide = (props: any) => {
         try {
             // console.log( driverId)
             if (!driverAddress) {
-                const temp = await carpoolContract.getDriverAddress(0);
+                const temp = await carpoolContract.getDriverAddress(driverId);
                 console.log(temp);
                 setDriverAddress(temp);
             }
+
+
             // Call the contract method to create a ride
             const tx = await carpoolContract.createride(origin, destination, parseInt(deptTime), fare, seats, driverId, 0, parseInt(reachTime), false, driverAddress);
 
@@ -79,113 +83,113 @@ const CreateRide = (props: any) => {
 
 
     return (
-        <div className="container mx-auto mt-8">
-            <button
-                onClick={() => setOpenDriver(true)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"> create new driver Id </button>
-            {openDriver && < CreateDriver setDriverCreated={setDriverCreated} setOpenDriver={setOpenDriver} setDriverAddress={setDriverAddress} carpool={carpoolContract} setDriver={setDriverId} />}
-            {driverId && driverCreted && <Dialog closeModal={closeModal} string1="Driver Created" string2={`Driver Id: ${driverId}`} />}
-            {successModalOpen && <Dialog closeModal={closeModal} string1="Ride Created Successfully" string2="Your ride has been successfully created" />
-            }
-            {processing && <svg aria-hidden="true" className="w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-            </svg>}
-            {<div>
-
-                <div className='flex justify-between items-center'>
-                    <h2 className="text-2xl font-bold mb-4">Create a Ride</h2>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => { navigate('/myRides') }} >show rides</button>
-                </div>
-
-                <form onSubmit={handleCreateRide}>
-                    <div className="mb-4">
-                        <label htmlFor="origin" className="block text-sm font-semibold">Driver Id </label>
-                        <input
-                            type="number"
-                            id="driverId"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={driverId}
-                            onChange={(e) => setDriverId(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="origin" className="block text-sm font-semibold">Origin</label>
-                        <input
-                            type="text"
-                            id="origin"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={origin}
-                            onChange={(e) => setOrigin(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="destination" className="block text-sm font-semibold">Destination</label>
-                        <input
-                            type="text"
-                            id="destination"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={destination}
-                            onChange={(e) => setDestination(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="fare" className="block text-sm font-semibold">Fare</label>
-                        <input
-                            type="number"
-                            id="fare"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={fare}
-                            onChange={(e) => setFare(parseInt(e.target.value))}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="seats" className="block text-sm font-semibold">Available Seats</label>
-                        <input
-                            type="number"
-                            id="seats"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={seats}
-                            onChange={(e) => setSeats(parseInt(e.target.value))}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="deptTime" className="block text-sm font-semibold">Departure Time</label>
-                        <input
-                            type="time"
-                            id="deptTime"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={testDeptTime}
-                            onChange={(e) => setTestDeptTime(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="deptTime" className="block text-sm font-semibold">Approx Reach Time</label>
-                        <input
-                            type="time"
-                            id="reachTime"
-                            className="border border-gray-300 rounded px-3 py-2 w-full"
-                            value={testReach}
-                            onChange={(e) => setTestReach(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Create Ride
-                    </button>
-                </form>
+        <div className="grid grid-cols-2 gap-4 justify-around container mx-auto mt-8">
+            <div className="col-span-1 flex justify-center items-center">
+                <img src={image} alt="Image" className="w-1/2 h-auto rounded-md" />
             </div>
-            }
 
+            <div className="col-span-1 bg-slate-400 ">
+                <button onClick={() => navigate('/myRides')} className=" m-12 relative flex justify-center items-center px-5 py-2.5 font-medium tracking-wide text-white capitalize   bg-black rounded-md hover:bg-gray-900  focus:outline-none   transition duration-300 transform active:scale-95 ease-in-out">Created Rides</button>
+                <div className='flex justify-center items-center m-12'>
+                    <div className="bg-white p-10 rounded-md shadow-md  w-3/5 justify-center items-center">
+                        <button onClick={() => setOpenDriver(true)} className="relative w-full flex justify-center items-center px-5 py-2.5 font-medium tracking-wide text-white capitalize   bg-black rounded-md hover:bg-gray-900  focus:outline-none   transition duration-300 transform active:scale-95 ease-in-out">Create new driver Id</button>
+                        {openDriver && <CreateDriver setDriverCreated={setDriverCreated} setOpenDriver={setOpenDriver} setDriverAddress={setDriverAddress} carpool={carpoolContract} setDriver={setDriverId} />}
+                        {driverCreted && <Dialog closeModal={closeModal} string1="Driver Created" string2={`Driver Id: ${driverId}`} />}
+                        {successModalOpen && <Dialog closeModal={closeModal} string1="Ride Created Successfully" string2="Your ride has been successfully created" />}
+                    </div>
+                </div>
+                <div className='flex justify-center items-center m-12'>
+                    <div className="bg-white p-10 rounded-md shadow-md w-3/5">
+                        <h2 className="text-2xl font-bold mb-4">Create a Ride</h2>
+
+                        <form onSubmit={handleCreateRide} className="w-full max-w-sm">
+                            <div className="mb-4">
+                                <label htmlFor="driverId" className="block text-sm font-semibold">Driver Id</label>
+                                <input
+                                    type="number"
+                                    id="driverId"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={driverId}
+                                    onChange={(e) => setDriverId(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="origin" className="block text-sm font-semibold">Origin</label>
+                                <input
+                                    type="text"
+                                    id="origin"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={origin}
+                                    onChange={(e) => setOrigin(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="destination" className="block text-sm font-semibold">Destination</label>
+                                <input
+                                    type="text"
+                                    id="destination"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={destination}
+                                    onChange={(e) => setDestination(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="fare" className="block text-sm font-semibold">Fare in ETH</label>
+                                <input
+                                    type="number"
+                                    id="fare"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={fare}
+                                    onChange={(e) => setFare(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            {/* <div className="mb-4">
+                                <label htmlFor="seats" className="block text-sm font-semibold">Available Seats</label>
+                                <input
+                                    type="number"
+                                    id="seats"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={seats}
+                                    onChange={(e) => setSeats(e.target.value)}
+                                    required
+                                />
+                            </div> */}
+                            <div className="mb-4">
+                                <label htmlFor="deptTime" className="block text-sm font-semibold">Departure Time</label>
+                                <input
+                                    type="time"
+                                    id="deptTime"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={testDeptTime}
+                                    onChange={(e) => setTestDeptTime(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="reachTime" className="block text-sm font-semibold">Approx Reach Time</label>
+                                <input
+                                    type="time"
+                                    id="reachTime"
+                                    className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
+                                    value={testReach}
+                                    onChange={(e) => setTestReach(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="px-2 py-2 font-medium tracking-wide text-black capitalize transition duration-300 ease-in-out transform rounded-xl hover:bg-gray-300 focus:outline-none active:scale-95"
+                            >
+                                Create Ride
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
 contract carpooling {
@@ -16,8 +15,6 @@ contract carpooling {
         string accAddress;
     }
 
-    int userCnt = 0;
-    uint driverCnt = 0;
     struct ride {
         uint rideId;
         uint driverId;
@@ -30,13 +27,15 @@ contract carpooling {
         bool isComplete;
         uint approxReachTime;
         string accAddress;
+        bool payment; // New field for payment status
     }
 
-    int unbooked_ride = -1;
+    int userCnt = 0;
+    uint driverCnt = 0;
+    int rideCnt = 0;
     string public s = "hello";
     mapping(uint => address) public rideowner;
     mapping(uint => mapping(uint => address)) public rideToRider;
-    uint8 public ridecount = 0;
     ride[] public rides;
     user[] public person;
     driver[] public drivers;
@@ -53,7 +52,8 @@ contract carpooling {
         uint seats,
         bool isComplete,
         uint approxReachTime,
-        string accAddress
+        string accAddress,
+        bool payment
     );
     event rideBooked(uint rideId, uint seats, address passenger);
     event userCreated(uint index, string name, uint8 age, bool gender);
@@ -67,18 +67,15 @@ contract carpooling {
         driverCnt++;
         return driverCnt - 1;
     }
+
     function getDriverAddress(
         uint driverId
     ) public view returns (string memory) {
-        // require(driverId <= driverCnt, "Driver does not exist");
         return drivers[driverId].accAddress;
     }
-    function getDriver(uint index) public returns (driver memory) {
-        return drivers[index];
-    }
 
-    function getUser(uint index) public returns (user memory) {
-        return person[index];
+    function getDriver(uint index) public view returns (driver memory) {
+        return drivers[index];
     }
 
     function createUser(
@@ -87,15 +84,13 @@ contract carpooling {
         bool _gender
     ) public returns (int) {
         person.push(user(userCnt, _name, _age, _gender));
-        // addressDetails[msg.sender] = user(_name, _age, _gender); // Add user details to mapping
-        int index = userCnt; // Index of the newly created user
+        int index = userCnt;
         userCnt += 1;
-        // emit userCreated(index, _name, _age, _gender); // Emit event with user details
         return index;
     }
 
     function getRideCount() public view returns (uint) {
-        return ridecount;
+        return rides.length;
     }
 
     function getDriverCnt() public view returns (uint) {
@@ -115,7 +110,7 @@ contract carpooling {
         string memory _destination,
         uint _departuretime,
         uint _fare,
-        uint8 _seats,
+        uint _seats,
         uint _driverId,
         uint _userId,
         uint _approxTime,
@@ -124,9 +119,9 @@ contract carpooling {
     ) public {
         rides.push(
             ride(
-                ridecount,
+                uint(rideCnt),
                 _driverId,
-                -1,
+                int(-1),
                 _origin,
                 _destination,
                 _departuretime,
@@ -134,12 +129,13 @@ contract carpooling {
                 _seats,
                 _isComplete,
                 _approxTime,
-                _accAddress
+                _accAddress,
+                false // Set payment to false initially
             )
         );
-        rideowner[ridecount] = msg.sender;
+        rideowner[uint(rideCnt)] = msg.sender;
         emit rideCreated(
-            ridecount,
+            uint(rideCnt),
             _driverId,
             _userId,
             _origin,
@@ -149,9 +145,10 @@ contract carpooling {
             _seats,
             _isComplete,
             _approxTime,
-            _accAddress
+            _accAddress,
+            false // Emit payment status as false initially
         );
-        ridecount++;
+        rideCnt++;
     }
 
     function completeRide(uint _rideId) public {
@@ -162,12 +159,18 @@ contract carpooling {
         rides[_rideId].isComplete = true;
     }
 
-    function bookRide(uint rideId, int _userId) public {
+    function bookRide(uint _rideId, int _userId) public {
         require(_userId >= 0, "Invalid userId");
+        rides[_rideId].userId = _userId;
+        emit rideBooked(_rideId, rides[_rideId].seats, msg.sender);
+    }
 
-        // Update the userId in the ride struct
-        rides[rideId].userId = int(_userId);
-
-        emit rideBooked(rideId, rides[rideId].seats, msg.sender);
+    function updatePaymentStatus(uint _rideId) public {
+        require(_rideId < rides.length, "Invalid rideId");
+        require(
+            rideowner[_rideId] == msg.sender,
+            "Only the ride owner can update payment status"
+        );
+        rides[_rideId].payment = true;
     }
 }

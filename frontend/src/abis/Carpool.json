@@ -92,6 +92,12 @@
                 "internalType": "string",
                 "name": "accAddress",
                 "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "payment",
+                "type": "bool"
             }
         ],
         "name": "rideCreated",
@@ -166,7 +172,7 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "rideId",
+                "name": "_rideId",
                 "type": "uint256"
             },
             {
@@ -274,9 +280,9 @@
                 "type": "uint256"
             },
             {
-                "internalType": "uint8",
+                "internalType": "uint256",
                 "name": "_seats",
-                "type": "uint8"
+                "type": "uint256"
             },
             {
                 "internalType": "uint256",
@@ -403,6 +409,11 @@
                         "internalType": "string",
                         "name": "accAddress",
                         "type": "string"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "payment",
+                        "type": "bool"
                     }
                 ],
                 "internalType": "struct carpooling.ride[]",
@@ -451,7 +462,7 @@
                 "type": "tuple"
             }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -497,47 +508,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-            }
-        ],
-        "name": "getUser",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "int256",
-                        "name": "userId",
-                        "type": "int256"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint8",
-                        "name": "age",
-                        "type": "uint8"
-                    },
-                    {
-                        "internalType": "bool",
-                        "name": "gender",
-                        "type": "bool"
-                    }
-                ],
-                "internalType": "struct carpooling.user",
-                "name": "",
-                "type": "tuple"
-            }
-        ],
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -606,19 +576,6 @@
                 "internalType": "address",
                 "name": "",
                 "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "ridecount",
-        "outputs": [
-            {
-                "internalType": "uint8",
-                "name": "",
-                "type": "uint8"
             }
         ],
         "stateMutability": "view",
@@ -707,6 +664,11 @@
                 "internalType": "string",
                 "name": "accAddress",
                 "type": "string"
+            },
+            {
+                "internalType": "bool",
+                "name": "payment",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",
@@ -723,6 +685,19 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_rideId",
+                "type": "uint256"
+            }
+        ],
+        "name": "updatePaymentStatus",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     }
 ]

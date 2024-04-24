@@ -115,7 +115,6 @@ function App() {
         <Route path="/bookRide" element={<BookRide carpool={carpool} />} />
         <Route path="/myRides" element={<MyRide carpool={carpool} />} />
         <Route path="/bookedRides" element={<BookedRide carpool={carpool} />} />
-
       </Routes>
     </BrowserRouter >
   )
