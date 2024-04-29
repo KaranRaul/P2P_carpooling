@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const CreateDriver = (props: any) => {
     const [name, setName] = useState('');

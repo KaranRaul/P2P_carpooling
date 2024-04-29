@@ -1,6 +1,6 @@
-import { Spinner } from '@material-tailwind/react';
+
 import Dialog from './smallCompo/Dialog';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CreateDriver from './smallCompo/CreateDriver';
 import { useNavigate } from 'react-router-dom';
 import image from '../images/image.png'
@@ -8,19 +8,19 @@ const CreateRide = (props: any) => {
     const [origin, setOrigin] = useState('');
     const [destination, setDestination] = useState('');
     const [fare, setFare] = useState(0);
-    const [errorMessage, setErrorMessage] = useState('');
+    // const [errorMessage, setErrorMessage] = useState('');
     const [seats, setSeats] = useState(1);
     const [deptTime, setDeptTime] = useState('');
     const [reachTime, setReachTime] = useState('');
     const [testDeptTime, setTestDeptTime] = useState('');
     const [testReach, setTestReach] = useState('');
-    const [processing, setProcessing] = useState(false);
+    // const [processing, setProcessing] = useState(false);
     // const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [driverId, setDriverId] = useState(0);
     const [driverCreted, setDriverCreated] = useState(false);
     const [openDriver, setOpenDriver] = useState(false)
     const [successModalOpen, setSuccessModalOpen] = useState(false);
-    const [driverAddress, setDriverAddress] = useState();
+    const [driverAddress, setDriverAddress] = useState('');
     const carpoolContract = props.carpool;
     const navigate = useNavigate();
     const handleCreateRide = async (e: any) => {
@@ -51,7 +51,7 @@ const CreateRide = (props: any) => {
             await tx.wait();
 
             // Reset the form fields
-            setProcessing(true);
+            // setProcessing(true);
             setOrigin('');
             setDestination('');
             setFare(0);
@@ -67,7 +67,7 @@ const CreateRide = (props: any) => {
         } catch (error) {
             console.error('Error creating ride:', error);
         } finally {
-            setProcessing(false); // Stop processing
+            // setProcessing(false); // Stop processing
         }
     };
     // const handleChange = (e) => {
@@ -110,7 +110,7 @@ const CreateRide = (props: any) => {
                                     id="driverId"
                                     className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
                                     value={driverId}
-                                    onChange={(e) => setDriverId(e.target.value)}
+                                    onChange={(e) => setDriverId(parseInt(e.target.value))}
                                     required
                                 />
                             </div>
@@ -143,7 +143,7 @@ const CreateRide = (props: any) => {
                                     id="fare"
                                     className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
                                     value={fare}
-                                    onChange={(e) => setFare(e.target.value)}
+                                    onChange={(e) => setFare(parseInt(e.target.value))}
                                     required
                                 />
                             </div>

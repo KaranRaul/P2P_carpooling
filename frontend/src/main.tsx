@@ -11,15 +11,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { RideProvider } from '../src/context/RideContext';
+// import { RideProvider } from '../src/context/RideContext';
 
 ReactDOM.render(
   <React.StrictMode >
     {/* Wrap your App component with RideProvider */}
-    <RideProvider>
+    {/* <RideProvider> */}
 
-      <App />
-    </RideProvider>
+    <App />
+    {/* </RideProvider> */}
   </React.StrictMode>,
   document.getElementById('root')
 );

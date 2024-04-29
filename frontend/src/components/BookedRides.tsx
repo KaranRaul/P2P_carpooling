@@ -1,18 +1,37 @@
-import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
 
-const BookedRide = (props) => {
-    const [rides, setRides] = useState([]);
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+
+interface Ride {
+    rideId: number;
+    driverId: number;
+    userId: number;
+    origin: string;
+    destination: string;
+    departuretime: number;
+    fare: number;
+    seats: number;
+    isComplete: boolean;
+    approxReachTime: number;
+    accAddress: string;
+    payment: boolean;
+}
+
+
+const BookedRide = (props: { props: any }) => {
+    const [rides, setRides] = useState<Ride[]>([]);
     const [userIndex, setUserIndex] = useState(1);
     const [showPayDialog, setShowPayDialog] = useState(false); // State to track dialog visibility
     const [fareToPay, setFareToPay] = useState(0); // State to track fare amount to pay
     const [selectedRideId, setSelectedRideId] = useState(null); // State to track the selected ride ID
-    const [addressFrom, setAddressFrom] = useState();
+    const [addressFrom, setAddressFrom] = useState<String>();
     const [addressTo, setAddressTo] = useState();
 
     const fetchBookedRides = async () => {
+        //@ts-ignore
         const allRides = await props.carpool.getAllRides();
         console.log(allRides);
+        //@ts-ignore
         const bookedRides = allRides.filter(ride => parseInt(ride.userId) === userIndex);
         setRides(bookedRides);
     };
@@ -21,12 +40,13 @@ const BookedRide = (props) => {
         fetchBookedRides();
     }, [userIndex]);
 
-    const formatTime = (timestamp) => {
-        const hours = parseInt(timestamp / 60)
-        const min = parseInt(timestamp % 60)
+    const formatTime = (timestamp: any) => {
+        timestamp = parseInt(timestamp);
+        const hours = (timestamp / 60).toFixed()
+        const min = Math.abs(timestamp % 60).toFixed()
         return `${hours}:${min}`;
     };
-
+    //@ts-ignore
     const handlePayButtonClick = (rideId, fare, to) => {
         setAddressTo(to);
         setSelectedRideId(rideId); // Set the selected ride ID
@@ -37,10 +57,9 @@ const BookedRide = (props) => {
     const handlePayDialogClose = () => {
         setShowPayDialog(false); // Close the dialog
     };
+    //@ts-ignore
     const { ethereum } = window as WindowWithEthereum;
-    const test = async () => {
 
-    };
 
     const handlePayDialogConfirm = async () => {
         try {
@@ -63,12 +82,9 @@ const BookedRide = (props) => {
                     ],
                 });
             }
+            //@ts-ignore
             await props.carpool.updatePaymentStatus(selectedRideId);
 
-            // Call the smart contract function to pay the fare
-            // const tr = await props.carpool.payFare(selectedRideId, { value: fareToPay });
-            // await tr.wait();
-            // Refresh the booked rides after payment
             fetchBookedRides();
             setShowPayDialog(false); // Close the dialog after payment
         } catch (error) {
@@ -98,14 +114,14 @@ const BookedRide = (props) => {
                                 <div className="flex justify-between items-center text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400">
                                     <div>
                                         <h3 className="text-lg font-bold">{ride.origin} to {ride.destination}</h3>
-                                        <p>Departure Time: {formatTime(parseInt(ride.departuretime))}</p>
-                                        <p>Approximate Reach Time: {formatTime(parseInt(ride.approxReachTime))}</p>
+                                        <p>Departure Time: {formatTime(ride.departuretime)}</p>
+                                        <p>Approximate Reach Time: {formatTime(ride.approxReachTime)}</p>
                                     </div>
                                     {!ride.payment && (
                                         <div className='flex items-center'>
-                                            <span className="font-bold mr-2">{parseInt(ride.fare)}</span>
+                                            <span className="font-bold mr-2">{ride.fare}</span>
                                             <span>ETH</span>
-                                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" onClick={() => handlePayButtonClick(parseInt(ride.rideId), parseInt(ride.fare), ride.accAddress)}>Pay Fare</button>
+                                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" onClick={() => handlePayButtonClick(ride.rideId, ride.fare, ride.accAddress)}>Pay Fare</button>
                                         </div>
                                     )}
                                 </div>
@@ -118,7 +134,8 @@ const BookedRide = (props) => {
                         <div className="bg-white rounded-lg p-8">
                             <h2 className="text-lg font-bold mb-4">Pay Fare</h2>
                             <p className="mb-4">Fare Amount: {fareToPay} ETH</p>
-                            <input type="text" value={addressFrom} placeholder="Enter Payment Reference" className="border p-2 rounded mb-4" onChange={(e) => setAddressFrom(e.target.value)} />
+                            {/* //@ts-ignore */}
+                            <input type="text" placeholder="Enter Payment Reference" className="border p-2 rounded mb-4" onChange={(e) => setAddressFrom(e.target.value)} />
                             <div className="flex justify-between">
                                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePayDialogClose}>Cancel</button>
                                 <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handlePayDialogConfirm}>Pay</button>

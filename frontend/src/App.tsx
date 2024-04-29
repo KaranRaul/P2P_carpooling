@@ -1,45 +1,56 @@
-import ReactDOM from "react-dom/client";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from 'react'
 import './App.css'
-import { EtherSymbol, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import BookRide from './components/BookRide'
 import CreateRide from './components/CreateRide'
 import Home from './components/Home'
-
+// require('dotenv').config();
 // hardhat.config.js
-import config from './config.json'
+// import config from './config.json'
 import Carpool from './abis/Carpool.json'
 import MyRide from "./components/MyRide";
 import BookedRide from "./components/BookedRides";
 function App() {
+  // console.log(process.env.API_KEY)
+  const API_KEY = "WFsQIPw7d0ax-6WLAusXv-zTPsSK9zRF"
+  const PRIVATE_KEY = "06bccf5c8966b60ee913589e12244779c0ac594e671cb1653eddbba6ea145723";
+  const CONTRACT_ADDRESS = "0x0901645c0f4FA8dBcbA75a9efA93E89d1D3506BC";
 
-
-  const [account, setAccount] = useState<String>();
-  const [provider, setProvider] = useState<ethers.BrowserProvider>();
+  // const [account, setAccount] = useState<String>();
+  // const [provider, setProvider] = useState<ethers.BrowserProvider>();
   const [carpool, setCarpool] = useState<ethers.Contract>();
-  const [rides, setRides] = useState<any[]>([]);
+  // const [rides, setRides] = useState<any[]>([]);
   // const [provider,setProvider]  = useState(null);
   // const [provider,setProvider]  = useState(null);
   // const [provider,setProvider]  = useState(null);
 
   const loadBlockchainData = async () => {
-    const provider = new ethers.BrowserProvider(window.ethereum)
-    // console.log(provider);
-    const network = await provider.getNetwork()
-    const signer = await provider.getSigner();
+    const contract = Carpool;
+    // const test = new ethers.AlchemyProvider("ropsten", API_KEY);
+    const alchemyProvider = new ethers.AlchemyProvider("sepolia", API_KEY);
+    const signer = new ethers.Wallet(PRIVATE_KEY, alchemyProvider);
+    // console.log(alchemyProvider);
+    // console.log(signer);
+    const helloWorldContract = new ethers.Contract(CONTRACT_ADDRESS, contract, signer);
+    // console.log(helloWorldContract);
+    // const provider = new ethers.BrowserProvider(window.ethereum)
+    // // console.log(provider);
+    // const network = await provider.getNetwork()
+    // const signer = await provider.getSigner();
     // console.log(signer)
     // console.log(network);
-    setProvider(provider)
+    // setProvider(provider)
     // console.log(Carpool);
-    const carpool = new ethers.Contract(config[network.chainId].carpool.address, Carpool, signer)
+    // const carpool = new ethers.Contract(config[network.chainId].carpool.address, Carpool, signer)
     // console.log(carpool);
-    setCarpool(carpool);
+    setCarpool(helloWorldContract);
 
 
     // setDappazon(dappazon)
   }
-  const { ethereum } = window as WindowWithEthereum;
+  // const { ethereum } = window;
   // const test = async () => {
   //   if (ethereum) {
   //     const valInEth = 12; // 4 ETH
@@ -61,21 +72,21 @@ function App() {
   //     });
   //   }
   // };
-  const connect = async () => {
-    const accts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (accts.length > 0) {
-      const acc = ethers.getAddress(accts[0]);
-      // console.log(ethers)
-      setAccount(acc);
-      // console.log(acc);
-    } else {
-      console.error("No accounts found.");
-    }
+  // const connect = async () => {
+  //   const accts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //   if (accts.length > 0) {
+  //     const acc = ethers.getAddress(accts[0]);
+  //     // console.log(ethers)
+  //     setAccount(acc);
+  //     // console.log(acc);
+  //   } else {
+  //     console.error("No accounts found.");
+  //   }
 
-    const rides = [];
+  //   const rides = [];
 
 
-  }
+  // }
   const fetchRides = async () => {
     if (carpool) {
       // const tx = await carpool.createride("origin", "destination", 10, 20, 1);
@@ -112,9 +123,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/createRide" element={<CreateRide carpool={carpool} />} />
-        <Route path="/bookRide" element={<BookRide carpool={carpool} />} />
-        <Route path="/myRides" element={<MyRide carpool={carpool} />} />
-        <Route path="/bookedRides" element={<BookedRide carpool={carpool} />} />
+        <Route path="/myRides" element={//@ts-ignore 
+          <MyRide carpool={carpool} />} />
+        <Route path="/bookRide" element={ //@ts-ignore
+          <BookRide carpool={carpool} />} />
+        <Route path="/bookedRides" element={//@ts-ignore
+          <BookedRide carpool={carpool} />} />
       </Routes>
     </BrowserRouter >
   )

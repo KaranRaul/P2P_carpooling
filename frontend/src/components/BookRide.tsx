@@ -1,93 +1,114 @@
-import React, { useEffect, useState } from 'react';
-import { Ride } from '../context/RideContext';
+import { useEffect, useState } from 'react';
 import Dialog from './smallCompo/Dialog';
 import image from '../images/image1.png'
-import { Navigate, useNavigate } from 'react-router-dom';
-const BookRide = (props) => {
+import { useNavigate } from 'react-router-dom';
+interface Ride {
+    rideId: number;
+    driverId: number;
+    userId: number;
+    origin: string;
+    destination: string;
+    departuretime: number;
+    fare: number;
+    seats: number;
+    isComplete: boolean;
+    approxReachTime: number;
+    accAddress: string;
+    payment: boolean;
+}
+const BookRide = (props: { props: any }) => {
     const navigate = useNavigate();
     const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [fetchingRides, setFetchingRides] = useState(false);
+    const [age, setAge] = useState<number>();
+    // const [fetchingRides, setFetchingRides] = useState(false);
     const [gender, setGender] = useState('');
     const [userIndex, setUserIndex] = useState<Number>(-1);
     const [userDialog, setUserDialog] = useState(false);
-    const [userAdded, setUserAdded] = useState(false);
+    // const [userAdded, setUserAdded] = useState(false);
     const [rides, setRides] = useState([]);
     const [origin, setOrigin] = useState('');
     const [destination, setDestination] = useState('');
     const [searchResults, setSearchResults] = useState<Ride[]>([]);
     const [bookingSuccess, setBookingSuccess] = useState(false);
-    const [users, setUsers] = useState([]);
+    // const [users, setUsers] = useState([]);
     const [userAlreadyExist, setUserAlreadyExists] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const fetchRides = async () => {
 
-        setFetchingRides(true); // Start fetching rides
+        // setFetchingRides(true); // Start fetching rides
 
+        //@ts-ignore
         const allRides = await props.carpool.getAllRides();
         setRides(allRides);
 
-        setFetchingRides(false);
+        // setFetchingRides(false);
     };
     const fetchUsers = async () => {
+        //@ts-ignore
         const allUsers = await props.carpool.getUsers();
         console.log(allUsers);
+        //@ts-ignore
         const test = await props.carpool.ridecount;
         console.log(test);
-        setUsers(allUsers);
+        // setUsers(allUsers);
     };
 
     const handleSearch = () => {
         console.log(rides);
         fetchRides();
-        setFetchingRides(true);
+        // setFetchingRides(true);
         // Filter rides based on origin and destination
+        //@ts-ignore
         const filteredRides = rides.filter(ride => ride.origin.toString() === origin && ride.destination.toString() === destination);
-        setFetchingRides(false);
+        // setFetchingRides(false);
         setSearchResults(filteredRides);
     };
-    const formatTime = (timestamp) => {
-        const hours = parseInt(timestamp / 60)
-        const min = parseInt(timestamp % 60)
+    const formatTime = (timestamp: any) => {
+        timestamp = parseInt(timestamp);
+        const hours = (timestamp / 60).toFixed()
+        const min = Math.abs(timestamp % 60).toFixed()
         return `${hours}:${min}`;
     };
-    const addUser = async (e) => {
+    const addUser = async (e: any) => {
         e.preventDefault();
 
         // Create a new user with the provided information
         // const test = await props.carpool.createUser(name, parseInt(age), gender === 'male' ? true : false);
         // await test.wait;
-        if (age < 0) {
+        if (age && age < 0) {
             setErrorMessage('Age must be a positive integer');
             return;
         }
+        //@ts-ignore
         const newUserIndex = await props.carpool.createUser(name, parseInt(age), gender === 'male' ? true : false);
         await newUserIndex.wait();
         fetchUsers();
+        //@ts-ignore
         const test = await props.carpool.getUserCnt();
         setUserIndex(parseInt(test) - 1);
         console.log(test);
         setUserDialog(true);
 
 
-        setUserAdded(true);
+        // setUserAdded(true);
         setUserAlreadyExists(false);
         // Reset the input fields
         setName('');
-        setAge('');
+        setAge(0);
         setGender('');
     };
 
     const rideBooked = () => {
-        setSearchResults("");
+        setSearchResults([]);
         setOrigin("");
         setDestination("");
         setBookingSuccess(true); // Set booking success to true
     };
 
-    const handleBookRide = async (rideId) => {
+    const handleBookRide = async (rideId: number) => {
         try {
             // Call the bookRide function from the contract
+            //@ts-ignore
             await props.carpool.bookRide(rideId, userIndex);
             rideBooked();
             console.log('Ride booked successfully!');
@@ -125,6 +146,7 @@ const BookRide = (props) => {
                     </div>
 
                     {bookingSuccess && (
+                        //@ts-ignore
                         <Dialog closeModal={() => { setBookingSuccess(false) }} string1="Ride Booked Successfully" />
                     )}
                     <button
@@ -152,7 +174,7 @@ const BookRide = (props) => {
                                         placeholder="Age"
                                         className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
                                         value={age}
-                                        onChange={(e) => setAge(e.target.value)}
+                                        onChange={(e) => setAge(parseInt(e.target.value))}
                                         required
                                     />
                                     <select
@@ -181,7 +203,7 @@ const BookRide = (props) => {
                                     placeholder="User ID"
                                     className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-100 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
                                     value={userIndex.toString()}
-                                    onChange={(e) => setUserIndex(e.target.value)}
+                                    onChange={(e) => setUserIndex(parseInt(e.target.value))}
                                     required
                                 />
                                 <input
@@ -215,7 +237,7 @@ const BookRide = (props) => {
                                         <div key={ride.rideId} className="text-black font-bold w-full  border border-gray-300 rounded p-4">
                                             <p className="text-xl font-bold mb-2">{ride.origin} to {ride.destination}</p>
                                             <p className="text-gray-600">Seats Available: {ride.seats.toString()}</p>
-                                            <p className="text-gray-600">Departure Time: {formatTime(parseInt(ride.departuretime))}</p>
+                                            <p className="text-gray-600">Departure Time: {formatTime(ride.departuretime)}</p>
                                             <button
                                                 onClick={() => handleBookRide(ride.rideId)}
                                                 className="bg-green-500 text-white px-3 py-1 rounded mt-2 hover:bg-green-600"
